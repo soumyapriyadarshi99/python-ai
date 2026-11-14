@@ -94,13 +94,33 @@ Each calls `super().__init__(title, item_id)` and implements `late_fee()` with i
 
 ## Deliverables
 
-Answer these three questions in your `README.md`:
+### 1. Why is `LibraryItem` an abstract class?
 
-1. **Why is `LibraryItem` an abstract class?**
-2. **Why are `__available` and `__borrowed` private?**
-3. **How does polymorphism help in `main.py`?**
+`LibraryItem` is abstract because you should never create a plain "library item" by itself — every item in the library is specifically a Book, Magazine, or DVD. Making it abstract (with `@abstractmethod` on `late_fee()`) forces every child class to define its own late fee calculation. If you try `LibraryItem("x", 1)`, Python raises a `TypeError`, which prevents invalid or incomplete objects from being created.
+
+### 2. Why are `__available` and `__borrowed` private?
+
+They are private (double underscore prefix) so they can only be changed through controlled methods, never directly from outside the class.
+
+- `__available`: Only `mark_borrowed()` and `mark_returned()` should change availability. If outside code could set `item.__available = True` directly, it could mark a borrowed item as available without going through the return process, breaking the library's rules.
+- `__borrowed`: Only `borrow()` and `return_item()` should modify the borrowed list. They enforce validation (availability check, borrow limit, return check). If outside code could append to `__borrowed` directly, a member could bypass limits or borrow items that are already taken.
+
+Private attributes ensure the object's internal state stays consistent and all business rules are enforced.
+
+### 3. How does polymorphism help in `main.py`?
+
+Polymorphism lets you treat Book, Magazine, and DVD objects the same way through their shared parent interface. In `main.py`, you can put all three in one list and call `item.late_fee(3)` without checking what type each item is:
+
+```python
+items = [book, magazine, dvd]
+for item in items:
+    print(item.late_fee(3))  # Rs 6, Rs 3, Rs 15 — no if/else needed
+```
+
+Python automatically calls the correct `late_fee()` for each object. This means if you add a new item type later (e.g., Journal), the loop still works without any changes — you only need to add the new class.
 
 ---
+
 
 ## File Structure
 

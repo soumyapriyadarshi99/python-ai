@@ -1,79 +1,120 @@
-Brief
-Problem statement
-A campus library lends three kinds of items: books, magazines and DVDs. Staff need a program that stores the items, lets members borrow and return them, and refuses invalid actions with clear messages instead of crashing.
+# Campus Library Management
+
+## Brief
+
+### Problem Statement
+
+A campus library lends three kinds of items: **books**, **magazines**, and **DVDs**. Staff need a program that:
+
+- Stores the items
+- Lets members borrow and return them
+- Refuses invalid actions with clear messages instead of crashing
+
+### Requirements
 
 Your program must:
 
-Model each item type as its own class, sharing common behaviour through a parent class.
+1. Model each item type as its own class, sharing common behaviour through a parent class.
+2. Calculate a late fee that differs per item type:
+   - Books: Rs 2/day
+   - Magazines: Rs 1/day
+   - DVDs: Rs 5/day
+3. Keep an item's availability and a member's borrowed list **private**, changed only through methods.
+4. Handle bad input (item already borrowed, borrow limit reached, returning something not borrowed) with exceptions.
+5. Run a short demo in `main.py` that exercises every feature and prints readable output.
 
-Calculate a late fee that differs per item type (books Rs 2/day, magazines Rs 1/day, DVDs Rs 5/day).
+---
 
-Keep an item's availability and a member's borrowed list private, changed only through methods.
+## Learning Objectives
 
-Handle bad input (item already borrowed, borrow limit reached, returning something not borrowed) with exceptions.
+Each part of the brief maps to a topic from class, so you can revise as you go:
 
-Run a short demo in main.py that exercises every feature and prints readable output.
+| Concept | Where It Appears |
+|---------|-----------------|
+| Abstract base class | `LibraryItem` parent class |
+| Encapsulation (private attributes) | `__available`, `__borrowed` |
+| Class attribute | `total_items` |
+| Polymorphism | `late_fee()` called on mixed item types |
+| Exception handling | `try / except ValueError` |
 
-Learning objectives
-Each part of the brief maps to a topic from class, so you can revise as you go.
+---
 
-Step-by-step tasks
+## Step-by-Step Tasks
+
 Work in order and run your code after every step. Each step ends with a checkpoint to confirm it works.
 
-Set up the project.
+### 1. Set Up the Project
 
-Create a folder library_manager with main.py and models.py.
+Create `models.py` and `main.py` directly inside the `Campus-Library-Management` folder. Paste the starter code into the matching files.
 
-Paste the starter code into the matching files.
+**Checkpoint:** `python3 main.py` runs without errors.
 
-Checkpoint: python3 main.py runs without errors (on Windows, python main.py).
+### 2. Build the Abstract Parent `LibraryItem` in `models.py`
 
-Build the abstract parent LibraryItem in models.py.
+- Constructor takes `title` and `item_id`; store a private `__available = True`.
+- Add a class attribute `total_items` that increases by 1 in `__init__`.
+- Add `is_available()`, `mark_borrowed()` and `mark_returned()`.
+- Declare `late_fee(self, days_late)` with `@abstractmethod`.
 
-Constructor takes title and item_id; store a private \_\_available = True.
+**Checkpoint:** `LibraryItem("x", 1)` raises a `TypeError` because the class is abstract.
 
-Add a class attribute total_items that increases by 1 in init.
+### 3. Create the Three Child Classes
 
-Add is_available(), mark_borrowed() and mark_returned().
+- **Book** (extra `author`)
+- **Magazine** (extra `issue_number`)
+- **DVD** (extra `duration_minutes`)
 
-Declare late_fee(self, days_late) with @abstractmethod.
+Each calls `super().__init__(title, item_id)` and implements `late_fee()` with its own daily rate. Add a `describe()` method to each that returns a one-line description.
 
-Checkpoint: LibraryItem("x", 1) raises a TypeError because the class is abstract.
+**Checkpoint:** `print(Book("Python 101", 1, "A. Rao").describe())` shows a readable line, and `LibraryItem.total_items` goes up with each object.
 
-Create the three child classes.
+### 4. Build the `Member` Class
 
-Book (extra author), Magazine (extra issue_number), DVD (extra duration_minutes).
+- Constructor: `name`, `member_id`, `max_items=3` (default argument); private `__borrowed = []`.
+- `borrow(item)` raises a `ValueError` with a clear message if the item is taken, or if the limit is reached.
+- `return_item(item, days_late=0)` raises a `ValueError` if the item is not on the member's list, otherwise returns the fee.
+- `borrowed_titles()` returns a list of titles without exposing `__borrowed`.
 
-Each calls super().**init**(title, item_id) and implements late_fee() with its own daily rate.
+**Checkpoint:** Borrowing a 4th item, or the same item twice, raises a `ValueError` with the right message.
 
-Add a describe() method to each that returns a one-line description (see Book).
+### 5. Show Polymorphism and Error Handling in `main.py`
 
-Checkpoint: print(Book("Python 101", 1, "A. Rao").describe()) shows a readable line, and LibraryItem.total_items goes up with each object.
+- Create 2 members and one of each item type.
+- Loop over a mixed list of items and print `late_fee(3)` for each, with no `if` on the type.
+- Wrap borrow and return calls in `try / except ValueError as e` and print friendly messages.
 
-Build the Member class.
+**Checkpoint:** The output shows fees of Rs 6, Rs 3 and Rs 15 for 3 days late.
 
-Constructor: name, member_id, max_items=3 (default argument); private \_\_borrowed = [].
+### 6. Prove Encapsulation and Write the Reflection
 
-borrow(item) raises a ValueError with a clear message if the item is taken, or if the limit is reached.
+- Try `item.__available` from outside the class and note the `AttributeError`; then read availability properly with `is_available()`.
+- In `README.md`, answer the three questions in the **Deliverables** section below.
 
-return_item(item, days_late=0) raises a ValueError if the item is not on the member's list, otherwise returns the fee.
+---
 
-borrowed_titles() returns a list of titles without exposing \_\_borrowed.
+## Deliverables
 
-Checkpoint: borrowing a 4th item, or the same item twice, raises a ValueError with the right message.
+Answer these three questions in your `README.md`:
 
-Show polymorphism and error handling in main.py.
+1. **Why is `LibraryItem` an abstract class?**
+2. **Why are `__available` and `__borrowed` private?**
+3. **How does polymorphism help in `main.py`?**
 
-Create 2 members and one of each item type.
+---
 
-Loop over a mixed list of items and print late_fee(3) for each, with no if on the type.
+## File Structure
 
-Wrap borrow and return calls in try / except ValueError as e and print friendly messages.
+```
+Campus-Library-Management/
+├── .gitignore
+├── readme.md
+├── models.py
+└── main.py
+```
 
-Checkpoint: the output shows fees of Rs 6, Rs 3 and Rs 15 for 3 days late.
+### How to Run
 
-Prove encapsulation and write the reflection.
-
-Try item.\_\_available from outside the class and note the AttributeError; then read availability properly with is_available().
-
-In README.md, answer the three questions in the deliverables section.
+```bash
+cd /Users/soumyapriyadarshidas/Learning/python-ai/assigments/Campus-Library-Management
+python3 main.py
+```

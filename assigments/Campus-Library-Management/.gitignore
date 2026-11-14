@@ -1,0 +1,39 @@
+# Python bytecode / compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+.venv/
+ENV/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE / editor artifacts
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# macOS
+.DS_Store
+
+# Packaging / distribution
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Testing artifacts
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Distribution / wheel
+*.whl

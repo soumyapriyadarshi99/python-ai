@@ -10,7 +10,7 @@ where a problem asks for a number. Do not use loops or functions yet.
 #     Hello, <name>!
 # Replace <name> with the value they entered.
 name = input("Enter your name: ")
-print("Hello, ,{name}!")
+print("Hello, ${name}!")
 
 
 # Problem 2: Voting eligibility
